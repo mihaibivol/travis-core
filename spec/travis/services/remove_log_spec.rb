@@ -21,6 +21,11 @@ describe Travis::Services::RemoveLog do
         service.run
       }.to_not change { service.log.reload.content }
     end
+
+    it 'sets error message' do
+      error = service.run.fetch(:error)
+      error.fetch(:message).should =~ /not finished/
+    end
   end
 
   context 'when user does not have push permissions' do
@@ -32,6 +37,11 @@ describe Travis::Services::RemoveLog do
       expect {
         service.run
       }.to_not change { service.log.reload.content }
+    end
+
+    it 'sets error message' do
+      error = service.run.fetch(:error)
+      error.fetch(:message).should =~ /(?i:unauthorized)/
     end
   end
 
